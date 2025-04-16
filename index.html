@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Sistem Kehadiran Pekerja</title>
+  <title>Sistem Kehadiran RNR</title>
 </head>
 <body>
   <h2>Sistem Kehadiran RNR</h2>
@@ -17,7 +17,7 @@
   <script>
     const lokasiTempatKerja = { lat: 5.381213, lon: 116.193136 };
     const radiusDibenarkan = 100; // meter
-    const urlGoogleSheet = "https://script.google.com/macros/s/PASTE_SCRIPT_URL_ANDA/exec";
+    const urlGoogleSheet = "https://script.google.com/macros/s/AKfycbwuIRAAUbH0owUVT5d0lzY9aX4pleDD6PcJ5BdE8oRWVAJ6Njz6TJc3gNoppimYhw8/exec";
 
     function dapatkanJarak(lat1, lon1, lat2, lon2) {
       const R = 6371e3;
@@ -57,7 +57,10 @@
         const userLon = pos.coords.longitude;
         const jarak = dapatkanJarak(userLat, userLon, lokasiTempatKerja.lat, lokasiTempatKerja.lon);
         alert(
-          `📍 Lokasi Anda Sekarang:\nLatitude: ${userLat}\nLongitude: ${userLon}\n\n📏 Jarak ke tempat kerja: ${Math.round(jarak)} meter\n✔️ Dalam radius dibenarkan: ${jarak <= radiusDibenarkan ? "YA" : "TIDAK"}`
+          "📍 Lokasi Anda Sekarang:\nLatitude: " + userLat +
+          "\nLongitude: " + userLon +
+          "\n\n📏 Jarak ke tempat kerja: " + Math.round(jarak) + " meter" +
+          "\n✔️ Dalam radius dibenarkan: " + (jarak <= radiusDibenarkan ? "YA" : "TIDAK")
         );
       } catch (err) {
         alert("❌ Gagal mendapatkan lokasi: " + err.message);
@@ -78,26 +81,19 @@
     }
 
     async function punchIn() {
-      const now = semakMasa();
       const nama = document.getElementById("nama").value.trim();
-
-      if (nama === "") {
-        alert("Sila masukkan nama anda.");
-        return;
-      }
+      if (!nama) return alert("Sila masukkan nama.");
 
       try {
         const pos = await semakLokasi();
         const userLat = pos.coords.latitude;
         const userLon = pos.coords.longitude;
         const jarak = dapatkanJarak(userLat, userLon, lokasiTempatKerja.lat, lokasiTempatKerja.lon);
-
         if (jarak <= radiusDibenarkan) {
-          const lokasiStr = `${userLat},${userLon}`;
-          await hantarData(nama, new Date().toLocaleString(), lokasiStr, "Punch In");
+          await hantarData(nama, new Date().toLocaleString(), `${userLat},${userLon}`, "Punch In");
           alert("✅ Punch In berjaya!");
         } else {
-          alert(`❌ Anda tidak berada dalam kawasan dibenarkan.\nJarak anda: ${Math.round(jarak)} meter`);
+          alert("❌ Anda di luar kawasan dibenarkan.\nJarak: " + Math.round(jarak) + " meter");
         }
       } catch (err) {
         alert("❌ Gagal mendapatkan lokasi: " + err.message);
@@ -105,26 +101,19 @@
     }
 
     async function punchOut() {
-      const now = semakMasa();
       const nama = document.getElementById("nama").value.trim();
-
-      if (nama === "") {
-        alert("Sila masukkan nama anda.");
-        return;
-      }
+      if (!nama) return alert("Sila masukkan nama.");
 
       try {
         const pos = await semakLokasi();
         const userLat = pos.coords.latitude;
         const userLon = pos.coords.longitude;
         const jarak = dapatkanJarak(userLat, userLon, lokasiTempatKerja.lat, lokasiTempatKerja.lon);
-
         if (jarak <= radiusDibenarkan) {
-          const lokasiStr = `${userLat},${userLon}`;
-          await hantarData(nama, new Date().toLocaleString(), lokasiStr, "Punch Out");
+          await hantarData(nama, new Date().toLocaleString(), `${userLat},${userLon}`, "Punch Out");
           alert("✅ Punch Out berjaya!");
         } else {
-          alert(`❌ Anda tidak berada dalam kawasan dibenarkan.\nJarak anda: ${Math.round(jarak)} meter`);
+          alert("❌ Anda di luar kawasan dibenarkan.\nJarak: " + Math.round(jarak) + " meter");
         }
       } catch (err) {
         alert("❌ Gagal mendapatkan lokasi: " + err.message);
