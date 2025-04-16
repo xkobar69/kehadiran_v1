@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="ms">
 <head>
+  <meta charset="UTF-8">
   <title>Sistem Kehadiran RNR</title>
 </head>
 <body>
@@ -26,18 +27,12 @@
         const φ2 = lat2 * Math.PI / 180;
         const Δφ = (lat2 - lat1) * Math.PI / 180;
         const Δλ = (lon2 - lon1) * Math.PI / 180;
+
         const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
                   Math.cos(φ1) * Math.cos(φ2) *
                   Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c;
-      }
-
-      function semakMasa() {
-        const now = new Date();
-        const jam = now.getHours();
-        const minit = now.getMinutes();
-        return jam + (minit / 60);
       }
 
       function semakLokasi() {
@@ -120,10 +115,10 @@
         }
       }
 
-      // 🎯 Attach functions to button click events
-      document.getElementById("btnSemak").onclick = semakLokasiDebug;
-      document.getElementById("btnIn").onclick = punchIn;
-      document.getElementById("btnOut").onclick = punchOut;
+      // 🧩 Attach function bila page dah siap load
+      document.getElementById("btnSemak").addEventListener("click", semakLokasiDebug);
+      document.getElementById("btnIn").addEventListener("click", punchIn);
+      document.getElementById("btnOut").addEventListener("click", punchOut);
     });
   </script>
 </body>
